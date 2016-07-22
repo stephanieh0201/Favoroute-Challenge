@@ -22,17 +22,13 @@ import java.net.URL;
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
  */
-public class PhotoSearch extends AsyncTask<Void, Void, Boolean> {
+public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
     String apiURL= "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
-    Integer []farm=new Integer[10];
-    String [] server = new String[10];
-    String [] id = new String[10];
-    String [] secret = new String[10];
-    String [] photoURL = new String [10];
-    Bitmap [] photoBitmaps = new Bitmap[10];
-    String[] small = new String [10];
+
+    String[] images = new String [10];
     String [] captions = new String[10];
+    Bitmap [] photoBitmaps = new Bitmap[10];
     TravelList fragment;
 
 
@@ -41,11 +37,11 @@ public class PhotoSearch extends AsyncTask<Void, Void, Boolean> {
     }
     @Override
 //    https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=YOURAPIKEY&format=json&nojsoncallback=1&text=cats&extras=url_o
-    protected Boolean doInBackground(Void... params) {
+    protected Boolean doInBackground(String... params) {
 
             //Create JSON object for post
         try {
-            String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + "thailand"+ "&extras=url_n";
+            String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + params[0]+ "&extras=url_n";
             JSONObject results = postRequest(url);
 //            String message = (String)jsnobject.get("Message");
             System.out.println(results.toString());
@@ -55,15 +51,11 @@ public class PhotoSearch extends AsyncTask<Void, Void, Boolean> {
             for (int i=0;i<10;i++) {
                 System.out.println("i is "+ i);
                 JSONObject photo = (JSONObject) photos.get(i);
-                farm[i] = (Integer) photo.get("farm");
-                server[i] = (String) photo.get("server");
 
-                id[i] = (String) photo.get("id");
-                secret[i] = (String) photo.get("secret");
-                photoURL[i] = "http://farm" + farm[i] + ".staticflickr.com/" + server[i] + "/" + id[i] + "_" + secret[i] + ".jpg";
 
-                small[i] = (String) photo.get("url_n");
-                photoBitmaps[i]= urlStringToBitmap(small[i]);
+
+                String image = (String) photo.get("url_n");
+                photoBitmaps[i]= urlStringToBitmap(image);
                 captions[i]= (String) photo.get("title");
                 System.out.println(captions[i]);
 

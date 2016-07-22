@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     TextView addSelfie, showSelfies, showTravels;
     FragmentManager fragmentManager;
     int teal, navy;
+    public static String searchTerm;
 
 //    apikey==0f6f6c131f8eb464ded3ac9ada60bc00
 
@@ -80,12 +81,9 @@ public class MainActivity extends AppCompatActivity {
         showTravels.setBackgroundColor(teal);
         showTravels.setTextColor(navy);
 
+        TravelSearchDialog travelSearchDialog= new TravelSearchDialog();
+        travelSearchDialog.show(getSupportFragmentManager(), "TravelSearchDialog");
 
-        TravelList travelList = new TravelList();
-        fragmentManager.beginTransaction()
-//          .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-                .add(R.id.fragment_container, travelList)
-                .addToBackStack(null)
-                .commit();
+
     }
 }

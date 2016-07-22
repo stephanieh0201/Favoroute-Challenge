@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/Teal"
+    android:padding="10dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Travel Search"
+        android:textSize="16sp"
+        android:textColor="@color/Navy"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Let's explore! Enter a travel destination to view beautiful photos of any location around the world."
+        android:textColor="@color/Navy"
+        android:layout_gravity="center"
+        android:textSize="14sp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="3"
+        android:hint="Where should we go?"
+        android:maxLines="1"
+        android:textColor="@color/Navy"
+        android:textSize="14sp"
+        android:padding="5dp"
+        android:background="@drawable/edittext"
+        android:id="@+id/travel_search_term"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Take me there!"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:textColor="@color/Navy"
+        android:id="@+id/search_button"
+        />
+
+</LinearLayout>

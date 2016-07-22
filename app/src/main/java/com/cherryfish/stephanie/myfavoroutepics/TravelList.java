@@ -23,6 +23,9 @@ public class TravelList extends Fragment{
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
 
+        Bundle bundle = new Bundle();
+
+
 
         // Setting the LayoutManager.
         layoutManager = new LinearLayoutManager(getActivity());
@@ -30,9 +33,13 @@ public class TravelList extends Fragment{
 
         adapter = new SelfieAdapter((MainActivity)getActivity(), null, null);
         recyclerView.setAdapter(adapter);
-        new PhotoSearch(this).execute();
+        new PhotoSearch(this).execute(MainActivity.searchTerm);
         return view;
 
+
+    }
+
+    public void search(String searchTerm){
 
     }
 
