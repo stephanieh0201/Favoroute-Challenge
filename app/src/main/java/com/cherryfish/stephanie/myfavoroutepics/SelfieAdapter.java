@@ -23,10 +23,14 @@ public class SelfieAdapter extends RecyclerView.Adapter {
     public Integer[] entityID;
     public Integer[] entityTypeID;
     public MainActivity activity;
+    public String[] captions;
+    public Bitmap[] bitmapPhotos;
 
     //    private final Integer[]banner2;
-    SelfieAdapter(MainActivity activity){
+    SelfieAdapter(MainActivity activity, Bitmap[] bitmapPhotos, String [] captions){
         this.activity=activity;
+        this.bitmapPhotos=bitmapPhotos;
+        this.captions=captions;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,31 +44,36 @@ public class SelfieAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder rHolder, int position) {
         final int pos = position;
         SelfieViewHolder holder = (SelfieViewHolder) rHolder;
-        Bitmap original = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beach);
-        int width = original.getWidth();
-        int height = original.getHeight();
-        int maxSize=400;
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize ;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
+        Bitmap original= bitmapPhotos[position];
+//        int width = original.getWidth();
+//        int height = original.getHeight();
+//        int maxSize=400;
+//        float bitmapRatio = (float) width / (float) height;
+//        if (bitmapRatio > 1) {
+//            width = maxSize ;
+//            height = (int) (width / bitmapRatio);
+//        } else {
+//            height = maxSize;
+//            width = (int) (height * bitmapRatio);
+//        }
 
 
-        Bitmap b = Bitmap.createScaledBitmap(original, width, height, true);
-        holder.selfie.setImageBitmap(b);
+//        Bitmap b = Bitmap.createScaledBitmap(original, width, height, true);
+        holder.selfie.setImageBitmap(original);
         holder.selfie.setAdjustViewBounds(true);
         holder.selfie.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        holder.caption.setText("Testing captions");
+        holder.caption.setText(captions[position]);
 
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        if (bitmapPhotos!=null){
+            System.out.println(bitmapPhotos.length);
+            return bitmapPhotos.length;
+        }
+
+        else return 0;
     }
 }
 

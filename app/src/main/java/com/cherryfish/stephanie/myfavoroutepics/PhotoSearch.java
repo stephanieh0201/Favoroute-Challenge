@@ -1,12 +1,17 @@
 package com.cherryfish.stephanie.myfavoroutepics;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -20,16 +25,54 @@ import java.net.URL;
 public class PhotoSearch extends AsyncTask<Void, Void, Boolean> {
     String apiURL= "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
+    Integer []farm=new Integer[10];
+    String [] server = new String[10];
+    String [] id = new String[10];
+    String [] secret = new String[10];
+    String [] photoURL = new String [10];
+    Bitmap [] photoBitmaps = new Bitmap[10];
+    String[] small = new String [10];
+    String [] captions = new String[10];
+    TravelList fragment;
+
+
+    PhotoSearch(TravelList fragment){
+        this.fragment=fragment;
+    }
     @Override
 //    https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=YOURAPIKEY&format=json&nojsoncallback=1&text=cats&extras=url_o
     protected Boolean doInBackground(Void... params) {
 
             //Create JSON object for post
-            String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + "thailand";
+        try {
+            String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + "thailand"+ "&extras=url_n";
             JSONObject results = postRequest(url);
 //            String message = (String)jsnobject.get("Message");
             System.out.println(results.toString());
-            return null;
+            JSONObject object = (JSONObject) results.get("photos");
+            JSONArray photos = (JSONArray) object.get("photo");
+            System.out.println("size is " + photos.length());
+            for (int i=0;i<10;i++) {
+                System.out.println("i is "+ i);
+                JSONObject photo = (JSONObject) photos.get(i);
+                farm[i] = (Integer) photo.get("farm");
+                server[i] = (String) photo.get("server");
+
+                id[i] = (String) photo.get("id");
+                secret[i] = (String) photo.get("secret");
+                photoURL[i] = "http://farm" + farm[i] + ".staticflickr.com/" + server[i] + "/" + id[i] + "_" + secret[i] + ".jpg";
+
+                small[i] = (String) photo.get("url_n");
+                photoBitmaps[i]= urlStringToBitmap(small[i]);
+                captions[i]= (String) photo.get("title");
+                System.out.println(captions[i]);
+
+            }
+            return true;
+            } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
 
 
     }
@@ -76,4 +119,19 @@ public class PhotoSearch extends AsyncTask<Void, Void, Boolean> {
         return null;
     }
 
+
+    public static Bitmap urlStringToBitmap(String s){
+        Bitmap mIcon11 = null;
+        try {
+            InputStream in = new java.net.URL(s).openStream();
+            mIcon11 = BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+        }
+        return mIcon11;
+    }
+    public void onPostExecute(Boolean result){
+        fragment.displayData(photoBitmaps, captions);
+    }
 }

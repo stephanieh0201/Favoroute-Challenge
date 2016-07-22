@@ -79,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
         showSelfies.setTextColor(teal);
         showTravels.setBackgroundColor(teal);
         showTravels.setTextColor(navy);
-        new PhotoSearch().execute();
 
-//        SelfieList selfieList = new SelfieList();
-//        fragmentManager.beginTransaction()
-////          .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-//                .add(R.id.fragment_container, selfieList)
-//                .addToBackStack(null)
-//                .commit();
+
+        TravelList travelList = new TravelList();
+        fragmentManager.beginTransaction()
+//          .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                .add(R.id.fragment_container, travelList)
+                .addToBackStack(null)
+                .commit();
     }
 }
