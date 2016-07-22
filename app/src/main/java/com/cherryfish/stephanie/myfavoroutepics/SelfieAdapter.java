@@ -17,16 +17,12 @@ import java.io.ByteArrayOutputStream;
  * Created by Stephanie Verlingo on 7/21/2016.
  */
 public class SelfieAdapter extends RecyclerView.Adapter {
-    public String[] charityName;
-    public Bitmap[] banner;
-    public Bitmap[] prof;
-    public Integer[] entityID;
-    public Integer[] entityTypeID;
+
     public MainActivity activity;
     public String[] captions;
     public Bitmap[] bitmapPhotos;
 
-    //    private final Integer[]banner2;
+
     SelfieAdapter(MainActivity activity, Bitmap[] bitmapPhotos, String [] captions){
         this.activity=activity;
         this.bitmapPhotos=bitmapPhotos;

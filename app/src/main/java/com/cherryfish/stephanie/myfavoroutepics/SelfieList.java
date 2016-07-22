@@ -31,14 +31,15 @@ public class SelfieList extends Fragment{
 //        adapter = new SelfieAdapter((MainActivity)getActivity(), null, null);
 //        recyclerView.setAdapter(adapter);
 //
+
+
+        MainActivity.showSelfies.setBackgroundColor(MainActivity.teal);
+        MainActivity.showSelfies.setTextColor(MainActivity.navy);
+        MainActivity.showTravels.setBackgroundColor(MainActivity.navy);
+        MainActivity.showTravels.setTextColor(MainActivity.teal);
         return view;
 
 
     }
 
-    public void displayData(Bitmap[] images, String[] captions){
-        adapter.bitmapPhotos=images;
-        adapter.captions=captions;
-        adapter.notifyDataSetChanged();
-    }
 }

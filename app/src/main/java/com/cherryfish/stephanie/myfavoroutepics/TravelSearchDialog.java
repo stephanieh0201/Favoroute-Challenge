@@ -40,7 +40,6 @@ public class TravelSearchDialog extends DialogFragment {
                 MainActivity.searchTerm=searchTerm.getText().toString();
                 TravelList travelList = new TravelList();
                 getFragmentManager().beginTransaction()
-//          .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
                         .add(R.id.fragment_container, travelList, "travelFrag")
                         .addToBackStack(null)
                         .commit();

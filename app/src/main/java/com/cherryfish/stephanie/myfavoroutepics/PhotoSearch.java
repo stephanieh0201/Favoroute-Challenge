@@ -26,34 +26,30 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
     String apiURL= "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
 
-    String[] images = new String [10];
     String [] captions = new String[10];
     Bitmap [] photoBitmaps = new Bitmap[10];
     TravelList fragment;
 
-
     PhotoSearch(TravelList fragment){
         this.fragment=fragment;
     }
+
     @Override
-//    https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=YOURAPIKEY&format=json&nojsoncallback=1&text=cats&extras=url_o
     protected Boolean doInBackground(String... params) {
 
             //Create JSON object for post
         try {
             String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + params[0]+ "&extras=url_n";
             JSONObject results = postRequest(url);
-//            String message = (String)jsnobject.get("Message");
             System.out.println(results.toString());
+
             JSONObject object = (JSONObject) results.get("photos");
             JSONArray photos = (JSONArray) object.get("photo");
             System.out.println("size is " + photos.length());
+
             for (int i=0;i<10;i++) {
                 System.out.println("i is "+ i);
                 JSONObject photo = (JSONObject) photos.get(i);
-
-
-
                 String image = (String) photo.get("url_n");
                 photoBitmaps[i]= urlStringToBitmap(image);
                 captions[i]= (String) photo.get("title");
@@ -80,14 +76,12 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
             //Create URL route
             route = new URL(url);
 
-
             //open connection and ready it for post request
             client = (HttpURLConnection) route.openConnection();
             client.setRequestMethod("GET");
             client.connect();
-            //receive results
-            int HttpResult = client.getResponseCode();
 
+            //receive results
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream(), "utf-8"));
             String line = null;
             StringBuilder sb = new StringBuilder();
@@ -113,17 +107,18 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
 
 
     public static Bitmap urlStringToBitmap(String s){
-        Bitmap mIcon11 = null;
+        Bitmap image = null;
         try {
             InputStream in = new java.net.URL(s).openStream();
-            mIcon11 = BitmapFactory.decodeStream(in);
+            image = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
-        return mIcon11;
+        return image;
     }
     public void onPostExecute(Boolean result){
+
         fragment.displayData(photoBitmaps, captions);
     }
 }

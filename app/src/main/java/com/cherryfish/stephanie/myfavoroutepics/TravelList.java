@@ -23,8 +23,13 @@ public class TravelList extends Fragment{
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
 
-        Bundle bundle = new Bundle();
 
+
+        MainActivity.showSelfies.setBackgroundColor(MainActivity.navy);
+        MainActivity.showSelfies.setTextColor(MainActivity.teal);
+        MainActivity.showTravels.setBackgroundColor(MainActivity.teal);
+        MainActivity.showTravels.setTextColor(MainActivity.navy
+        );
 
 
         // Setting the LayoutManager.
@@ -39,9 +44,6 @@ public class TravelList extends Fragment{
 
     }
 
-    public void search(String searchTerm){
-
-    }
 
     public void displayData(Bitmap[] images, String[] captions){
         adapter.bitmapPhotos=images;
