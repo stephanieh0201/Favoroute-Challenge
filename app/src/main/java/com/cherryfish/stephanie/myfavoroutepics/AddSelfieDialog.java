@@ -2,11 +2,15 @@ package com.cherryfish.stephanie.myfavoroutepics;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +20,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
@@ -70,23 +83,38 @@ public class AddSelfieDialog extends DialogFragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                getContext().getFilesDir().
+                Bitmap bitmap = ((BitmapDrawable)selfieImage.getDrawable()).getBitmap();
+                String caption = selfieCaption.getText().toString();
+                if (MainActivity.images!=null) {
+                    MainActivity.images.add(0, bitmap);
+                    MainActivity.captions.add(0, caption);
+                }
+                else {
+                    MainActivity.images=new ArrayList<Bitmap>();
+                    MainActivity.images.add(bitmap);
+                    MainActivity.captions=new ArrayList<String>();
+                    MainActivity.captions.add(caption);
+                }
+                SelfieList fragment = (SelfieList)getFragmentManager().findFragmentByTag("SelfieList");
+                fragment.addImages(MainActivity.images, MainActivity.captions);
 
                 dialog.dismiss();
 
             }
         });
 
-
-
-
-
         return dialog;
 
     }
 
-    public void updateImage(Uri image){
-        System.out.println("updating image" + image.toString());
-        selfieImage.setImageURI(image);
+
+    public void updateImage(Bitmap image){
+        selfieImage.setImageBitmap(image);
+        selfieImage.setBackground(null);
+        selfieImage.setPadding(0,0,0,0);
     }
+
+
 }
 

@@ -18,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
@@ -26,8 +28,8 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
     String apiURL= "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
 
-    String [] captions = new String[10];
-    Bitmap [] photoBitmaps = new Bitmap[10];
+    List<String> captions = new ArrayList<String>();
+    List<Bitmap>photoBitmaps = new ArrayList<Bitmap>();
     TravelList fragment;
 
     PhotoSearch(TravelList fragment){
@@ -51,9 +53,9 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
                 System.out.println("i is "+ i);
                 JSONObject photo = (JSONObject) photos.get(i);
                 String image = (String) photo.get("url_n");
-                photoBitmaps[i]= urlStringToBitmap(image);
-                captions[i]= (String) photo.get("title");
-                System.out.println(captions[i]);
+                photoBitmaps.add(i, urlStringToBitmap(image));
+                captions.add(i, (String) photo.get("title"));
+//                System.out.println(captions[i]);
 
             }
             return true;

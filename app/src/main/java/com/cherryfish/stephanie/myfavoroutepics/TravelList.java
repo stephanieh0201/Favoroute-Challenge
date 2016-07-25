@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
  */
@@ -45,7 +47,7 @@ public class TravelList extends Fragment{
     }
 
 
-    public void displayData(Bitmap[] images, String[] captions){
+    public void displayData(List<Bitmap> images, List<String> captions){
         adapter.bitmapPhotos=images;
         adapter.captions=captions;
         adapter.notifyDataSetChanged();

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
@@ -19,11 +20,11 @@ import java.io.ByteArrayOutputStream;
 public class SelfieAdapter extends RecyclerView.Adapter {
 
     public MainActivity activity;
-    public String[] captions;
-    public Bitmap[] bitmapPhotos;
+    public List<String> captions;
+    public List<Bitmap> bitmapPhotos;
 
 
-    SelfieAdapter(MainActivity activity, Bitmap[] bitmapPhotos, String [] captions){
+    SelfieAdapter(MainActivity activity, List<Bitmap> bitmapPhotos, List<String> captions){
         this.activity=activity;
         this.bitmapPhotos=bitmapPhotos;
         this.captions=captions;
@@ -40,33 +41,20 @@ public class SelfieAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder rHolder, int position) {
         final int pos = position;
         SelfieViewHolder holder = (SelfieViewHolder) rHolder;
-        Bitmap original= bitmapPhotos[position];
-//        int width = original.getWidth();
-//        int height = original.getHeight();
-//        int maxSize=400;
-//        float bitmapRatio = (float) width / (float) height;
-//        if (bitmapRatio > 1) {
-//            width = maxSize ;
-//            height = (int) (width / bitmapRatio);
-//        } else {
-//            height = maxSize;
-//            width = (int) (height * bitmapRatio);
-//        }
+        Bitmap original= bitmapPhotos.get(position);
 
-
-//        Bitmap b = Bitmap.createScaledBitmap(original, width, height, true);
         holder.selfie.setImageBitmap(original);
         holder.selfie.setAdjustViewBounds(true);
         holder.selfie.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        holder.caption.setText(captions[position]);
+        holder.caption.setText(captions.get(position));
 
     }
 
     @Override
     public int getItemCount() {
         if (bitmapPhotos!=null){
-            System.out.println(bitmapPhotos.length);
-            return bitmapPhotos.length;
+            System.out.println(bitmapPhotos.size());
+            return bitmapPhotos.size();
         }
 
         else return 0;

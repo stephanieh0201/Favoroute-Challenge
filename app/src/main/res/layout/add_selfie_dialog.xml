@@ -24,7 +24,6 @@
         android:src="@drawable/camera"
         android:background="@color/DarkGrey"
         android:padding="50dp"
-        android:tint="@color/LightBlue"
         android:clickable="true"/>
 
 

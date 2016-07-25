@@ -32,9 +32,7 @@ public class TravelSearchDialog extends DialogFragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                TravelList fragment = (TravelList)getChildFragmentManager().findFragmentByTag("travelFrag");
-//                System.out.println(searchTerm.getText().toString());
-//                fragment.search(searchTerm.getText().toString());
+
 
                 dialog.dismiss();
                 MainActivity.searchTerm=searchTerm.getText().toString();
@@ -45,10 +43,6 @@ public class TravelSearchDialog extends DialogFragment {
                         .commit();
             }
         });
-
-
-
-
 
         return dialog;
 

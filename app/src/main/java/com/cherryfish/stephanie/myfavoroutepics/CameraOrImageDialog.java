@@ -2,6 +2,7 @@ package com.cherryfish.stephanie.myfavoroutepics;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
@@ -43,7 +45,7 @@ public class CameraOrImageDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , PHOTO);
+                startActivityForResult(pickPhoto, PHOTO);
             }
         });
         camera = (Button) dialogView.findViewById(R.id.camera);
@@ -51,15 +53,10 @@ public class CameraOrImageDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                Uri uri  = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"photo.jpg");
-                takePicture.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(takePicture, CAMERA);
 
             }
         });
-
-
-
 
         return dialog;
 
@@ -69,22 +66,29 @@ public class CameraOrImageDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         if (requestCode==CAMERA)
                 if(resultCode == MainActivity.RESULT_OK){
-//                    System.out.println("setting image1");
-                    File file = new File(Environment.getExternalStorageDirectory().getPath(), "photo.jpg");
-                    Uri selectedImage = Uri.fromFile(file);
-                  //  Uri selectedImage = imageReturnedIntent.getData();
+
+                    Bundle extras = imageReturnedIntent.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+
                     AddSelfieDialog fragment = (AddSelfieDialog)getFragmentManager().findFragmentByTag("AddSelfieDialog");
-                    fragment.updateImage(selectedImage);
-//                    AddSelfieDialog.selfieImage.setImageURI(selectedImage);
+                    fragment.updateImage(imageBitmap);
+
                 }
 
         if (requestCode==PHOTO)
                 if(resultCode == MainActivity.RESULT_OK){
-//                    System.out.println("setting image2");
+
                     Uri selectedImage = imageReturnedIntent.getData();
-                    AddSelfieDialog fragment = (AddSelfieDialog)getFragmentManager().findFragmentByTag("AddSelfieDialog");
-                    fragment.updateImage(selectedImage);
-//                    AddSelfieDialog.selfieImage.setImageURI(selectedImage);
+                    Bitmap bitmap;
+
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                        AddSelfieDialog fragment = (AddSelfieDialog)getFragmentManager().findFragmentByTag("AddSelfieDialog");
+                        fragment.updateImage(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
         dialog.dismiss();

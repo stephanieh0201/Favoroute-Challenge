@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Favoroute Pics</string>
+    <string name="selfie">You don\'t have any saved selfies. Click the + to add a selfie!</string>
 </resources>
