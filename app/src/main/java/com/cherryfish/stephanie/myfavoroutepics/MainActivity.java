@@ -72,8 +72,11 @@ public class MainActivity extends AppCompatActivity {
         //set up fragment manager to navigate through the app
         fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
+
+            System.out.println("showing selfies");
             showSelfieList();
         } else {
+            System.out.print(savedInstanceState.size());
 
 
         }
@@ -81,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
     // display selfie view - will show selfie list if previously added selfoes
     // otherwise will display a message to add selfies
     public void showSelfieList() {
-
 
         SelfieList selfieList = new SelfieList();
         fragmentManager.beginTransaction()
@@ -94,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     // displays a dialog box to allow user to search for a travel destination
     // will show list after user searches
     public void showTravelsList() {
-
         TravelSearchDialog travelSearchDialog = new TravelSearchDialog();
         travelSearchDialog.show(getSupportFragmentManager(), "TravelSearchDialog");
 
@@ -119,20 +120,18 @@ public class MainActivity extends AppCompatActivity {
 
         }
         Fragment f = (Fragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
         if (f instanceof SelfieList){
             MainActivity.showSelfies.setBackgroundColor(MainActivity.teal);
             MainActivity.showSelfies.setTextColor(MainActivity.navy);
             MainActivity.showTravels.setBackgroundColor(MainActivity.navy);
             MainActivity.showTravels.setTextColor(MainActivity.teal);
+
         } else if (f instanceof TravelList) {
             MainActivity.showSelfies.setBackgroundColor(MainActivity.navy);
             MainActivity.showSelfies.setTextColor(MainActivity.teal);
             MainActivity.showTravels.setBackgroundColor(MainActivity.teal);
-            MainActivity.showTravels.setTextColor(MainActivity.navy
-            );
-
-
-
+            MainActivity.showTravels.setTextColor(MainActivity.navy);
         }
     }
 

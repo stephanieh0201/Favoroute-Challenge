@@ -27,7 +27,6 @@ import java.util.List;
 public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
     String apiURL= "https://api.flickr.com/services/rest/?method=flickr.photos.search";
     String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
-
     List<String> captions = new ArrayList<String>();
     List<Bitmap>photoBitmaps = new ArrayList<Bitmap>();
     TravelList fragment;
@@ -39,15 +38,17 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
 
-            //Create JSON object for post
+
         try {
+            //set up url to send requests
             String url = apiURL + "&api_key=" + apiKey+"&format=json&nojsoncallback=1&text=" + params[0]+ "&extras=url_n";
             JSONObject results = postRequest(url);
-            System.out.println(results.toString());
+   //         System.out.println(results.toString());
 
+            //create JSON object to send to post
             JSONObject object = (JSONObject) results.get("photos");
             JSONArray photos = (JSONArray) object.get("photo");
-            System.out.println("size is " + photos.length());
+ //           System.out.println("size is " + photos.length());
 
             for (int i=0;i<10;i++) {
                 System.out.println("i is "+ i);
@@ -55,14 +56,13 @@ public class PhotoSearch extends AsyncTask<String, Void, Boolean> {
                 String image = (String) photo.get("url_n");
                 photoBitmaps.add(i, urlStringToBitmap(image));
                 captions.add(i, (String) photo.get("title"));
-//                System.out.println(captions[i]);
 
             }
             return true;
             } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+                e.printStackTrace();
+            }
+            return null;
 
 
     }

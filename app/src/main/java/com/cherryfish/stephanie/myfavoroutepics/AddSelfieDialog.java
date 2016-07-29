@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,25 +39,23 @@ public class AddSelfieDialog extends DialogFragment {
     EditText selfieCaption;
     Button addButton;
     ImageView selfieImage;
-    Bundle addBundle;
+    AlertDialog dialog;
+    static Boolean photoSelected;
     private static final int REQUEST_ACCESS = 1;
     private static String[] ACCESS_PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    // Use the Builder class for convenient dialog construction
+        //create dialog box displaying selfie and caption
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        Bundle bundle = getArguments();
-
+        photoSelected=false;
         View dialogView = inflater.inflate(R.layout.add_selfie_dialog,null);
         builder.setView(dialogView);
-        addBundle = new Bundle();
-
-        final AlertDialog dialog = builder.create();
-        selfieCaption = (EditText) dialogView.findViewById(R.id.add_selfie_caption);
+        dialog = builder.create();
 
         selfieImage = (ImageView) dialogView.findViewById(R.id.add_selfie_image);
         selfieImage.setOnClickListener(new View.OnClickListener() {
@@ -64,43 +63,53 @@ public class AddSelfieDialog extends DialogFragment {
             public void onClick(View v) {
                 System.out.println("choosing image or camera");
                 int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
+                //check if app has permission to access camera
                 if (permission != PackageManager.PERMISSION_GRANTED) {
-                    // We don't have permission so prompt the user
+                    //request permission if not granted
                     ActivityCompat.requestPermissions(
                             getActivity(),
                             ACCESS_PERMISSIONS,
                             REQUEST_ACCESS
                     );
+                } else {
+                    //display dialog for user to select camera or existing photo
+                    CameraOrImageDialog cameraOrImageDialog = new CameraOrImageDialog();
+                    cameraOrImageDialog.show(getActivity().getSupportFragmentManager(), "CameraOrImage");
                 }
-                    else {
-                CameraOrImageDialog cameraOrImageDialog = new CameraOrImageDialog();
-                cameraOrImageDialog.show(getActivity().getSupportFragmentManager(), "CameraOrImage");
-                    }
             }
         });
+
+        // set up caption edittext field
+        selfieCaption = (EditText) dialogView.findViewById(R.id.add_selfie_caption);
+
+        // set up add button
         addButton= (Button) dialogView.findViewById(R.id.add_selfie_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getContext().getFilesDir().
-                Bitmap bitmap = ((BitmapDrawable)selfieImage.getDrawable()).getBitmap();
-                String caption = selfieCaption.getText().toString();
-                if (MainActivity.images!=null) {
-                    MainActivity.images.add(0, bitmap);
-                    MainActivity.captions.add(0, caption);
-                }
-                else {
-                    MainActivity.images=new ArrayList<Bitmap>();
-                    MainActivity.images.add(bitmap);
-                    MainActivity.captions=new ArrayList<String>();
-                    MainActivity.captions.add(caption);
-                }
-                SelfieList fragment = (SelfieList)getFragmentManager().findFragmentByTag("SelfieList");
-                fragment.addImages(MainActivity.images, MainActivity.captions);
+                //check that a photo has been selected
+                if (photoSelected) {
+                    Bitmap bitmap = ((BitmapDrawable) selfieImage.getDrawable()).getBitmap();
+                    String caption = selfieCaption.getText().toString();
+                    //add image and caption to first position in list if exisiting images are stored
+                    if (MainActivity.images != null) {
+                        MainActivity.images.add(0, bitmap);
+                        MainActivity.captions.add(0, caption);
+                    }
+                    //create new lists to store if first image for app
+                    else {
+                        MainActivity.images = new ArrayList<Bitmap>();
+                        MainActivity.images.add(bitmap);
+                        MainActivity.captions = new ArrayList<String>();
+                        MainActivity.captions.add(caption);
+                    }
+                    SelfieList fragment = (SelfieList) getFragmentManager().findFragmentByTag("SelfieList");
+                    fragment.addImages(MainActivity.images, MainActivity.captions);
 
-                dialog.dismiss();
-
+                    dialog.dismiss();
+                }
+                //if no image selected display message to user
+                else Toast.makeText(getContext(), "Select an image to upload", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -109,12 +118,11 @@ public class AddSelfieDialog extends DialogFragment {
     }
 
 
+    // method to update imageview when selected from camera or storage
     public void updateImage(Bitmap image){
         selfieImage.setImageBitmap(image);
         selfieImage.setBackground(null);
         selfieImage.setPadding(0,0,0,0);
     }
-
-
 }
 

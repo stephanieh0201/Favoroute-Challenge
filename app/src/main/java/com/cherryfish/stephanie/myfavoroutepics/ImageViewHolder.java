@@ -10,13 +10,14 @@ import org.w3c.dom.Text;
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
  */
-public class SelfieViewHolder  extends RecyclerView.ViewHolder {
+public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView selfie;
     public TextView caption;
     public View item;
 
-    public SelfieViewHolder(View itemView) {
+    //view holder for recycler lists
+    public ImageViewHolder(View itemView) {
         super(itemView);
         item=itemView;
         selfie = (ImageView) itemView.findViewById(R.id.selfie_image);

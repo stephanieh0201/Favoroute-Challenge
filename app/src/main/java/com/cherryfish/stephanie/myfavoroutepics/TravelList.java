@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class TravelList extends Fragment{
     private RecyclerView recyclerView;
-    private SelfieAdapter adapter;
+    private ListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -38,7 +38,7 @@ public class TravelList extends Fragment{
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new SelfieAdapter((MainActivity)getActivity(), null, null);
+        adapter = new ListAdapter((MainActivity)getActivity(), null, null);
         recyclerView.setAdapter(adapter);
         new PhotoSearch(this).execute(MainActivity.searchTerm);
         return view;
@@ -48,7 +48,7 @@ public class TravelList extends Fragment{
 
 
     public void displayData(List<Bitmap> images, List<String> captions){
-        adapter.bitmapPhotos=images;
+        adapter.photos=images;
         adapter.captions=captions;
         adapter.notifyDataSetChanged();
     }
