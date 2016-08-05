@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
@@ -16,7 +15,7 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
     public TextView caption;
     public View item;
 
-    //view holder for recycler lists
+    // view holder for recycler list items
     public ImageViewHolder(View itemView) {
         super(itemView);
         item=itemView;

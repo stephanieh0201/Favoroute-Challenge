@@ -37,7 +37,7 @@ public class CameraOrImageDialog extends DialogFragment {
         builder.setView(dialogView);
         dialog = builder.create();
 
-        //set up button to select existing image to post
+        //initialize button to select existing image to post
         photo = (Button) dialogView.findViewById(R.id.photo);
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +47,7 @@ public class CameraOrImageDialog extends DialogFragment {
             }
         });
 
-        //set up button to take new photo to post
+        //initialize button to take new photo to post
         camera = (Button) dialogView.findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public class CameraOrImageDialog extends DialogFragment {
                     photo.delete();
                 }
                 catch(Exception e) {
-                    System.out.println("Unable to store image");
+                    System.out.println(e);
                     return;
                 }
                 image = Uri.fromFile(photo);
@@ -95,7 +95,6 @@ public class CameraOrImageDialog extends DialogFragment {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                     AddSelfieDialog.photoSelected=true;
-                    System.out.println("bitmap is " +bitmap.toString());
                     AddSelfieDialog fragment = (AddSelfieDialog) getFragmentManager().findFragmentByTag("AddSelfieDialog");
                     fragment.updateImage(bitmap);
                 } catch (IOException e) {
@@ -119,23 +118,19 @@ public class CameraOrImageDialog extends DialogFragment {
     }
 
     //find stored camera image and return image
-    public Bitmap findPhoto()
-    {
+    public Bitmap findPhoto() {
         getActivity().getContentResolver().notifyChange(image, null);
         ContentResolver contentResolver = getActivity().getContentResolver();
         Bitmap bitmap;
-        try
-        {
+        try {
             bitmap = android.provider.MediaStore.Images.Media.getBitmap(contentResolver, image);
             return bitmap;
         }
-        catch (Exception e)
-        {
-           System.out.println("image not loaded");
+        catch (Exception e) {
+           System.out.println(e);
         }
         return null;
     }
-
 
 }
 

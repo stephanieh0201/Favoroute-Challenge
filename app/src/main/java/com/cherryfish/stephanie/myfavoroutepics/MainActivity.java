@@ -1,21 +1,14 @@
 package com.cherryfish.stephanie.myfavoroutepics;
 
-import android.app.Dialog;
+
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,13 +16,9 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
     public static int teal, navy;
     public static String searchTerm;
-    public static List<Bitmap> images;
     public static List<String> captions;
     public static List<String> urls;
     public static int selfieListSize;
-
-//    apikey==0f6f6c131f8eb464ded3ac9ada60bc00
-//    apisecret=eed5bbe4aabbb63f
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +27,14 @@ public class MainActivity extends AppCompatActivity {
         //get size of previously saved selfie list
         SharedPreferences settings = getSharedPreferences("Selfie", 0);
         selfieListSize = settings.getInt("selfieNumber", 0);
-        System.out.println("List size is  " + selfieListSize);
 
         setContentView(R.layout.activity_main);
 
-        //set up colors
+        //initialize colors
         teal = ContextCompat.getColor(getApplicationContext(), R.color.Teal);
         navy = ContextCompat.getColor(getApplicationContext(), R.color.Navy);
 
+        //initialize buttons/views
         addSelfie = (TextView) findViewById(R.id.add_selfie);
         addSelfie.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,17 +61,15 @@ public class MainActivity extends AppCompatActivity {
 
         //set up fragment manager to navigate through the app
         fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
 
-            System.out.println("showing selfies");
+        //if no saved state, show selfie listview
+        if (savedInstanceState == null) {
             showSelfieList();
         } else {
-            System.out.print(savedInstanceState.size());
-
 
         }
     }
-    // display selfie view - will show selfie list if previously added selfoes
+    // display selfie view - will show selfie list if previously added selfies
     // otherwise will display a message to add selfies
     public void showSelfieList() {
 

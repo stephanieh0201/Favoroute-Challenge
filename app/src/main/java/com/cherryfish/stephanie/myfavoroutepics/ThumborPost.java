@@ -9,18 +9,10 @@ import android.util.Log;
 import android.webkit.URLUtil;
 import java.io.File;
 
-
-import org.apache.http.client.methods.HttpPostHC4;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,16 +25,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 /**
  * Created by Stephanie Verlingo on 7/21/2016.
  */
 public class ThumborPost extends AsyncTask<File, Void, Boolean> {
-    String hostUrl = "http://188.226.195.167:8889/image/";
-  //  String apiKey="0f6f6c131f8eb464ded3ac9ada60bc00";
-//    List<String> captions = new ArrayList<String>();
-//    List<Bitmap>photoBitmaps = new ArrayList<Bitmap>();
-//    TravelList fragment;
-
+    String hostUrl = "http://188.226.195.167:8889";
+    String url;
     AddSelfieDialog fragment;
 
     ThumborPost(AddSelfieDialog fragment){
@@ -52,63 +48,37 @@ public class ThumborPost extends AsyncTask<File, Void, Boolean> {
     @Override
     protected Boolean doInBackground(File... params) {
         URL route = null;
-        HttpURLConnection client = null;
-        HttpPostHC4 request = new HttpPostHC4(hostUrl);
-        System.out.println("httpposthc4 opened");
-        String BOUNDRY = "----------------------------";
-
+//        HttpURLConnection client = null;
             try {
+                //create new HTTP Client
+                OkHttpClient client = new OkHttpClient();
 
-                String contentDisposition = "Content-Disposition: form-data; media=\"" + params[0].getName() + "\"";
-                String contentType = "Content-Type: image/jpeg";
+                //set up multiform media file
+                MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("media", "image.jpg",
+                                RequestBody.create(MEDIA_TYPE_JPG, params[0]))
+                        .build();
 
-                // multipart request
-                StringBuffer requestBody = new StringBuffer();
-                requestBody.append("--");
-                requestBody.append(BOUNDRY);
-                requestBody.append('\n');
-                requestBody.append(contentDisposition);
-                requestBody.append('\n');
-                requestBody.append(contentType);
-                requestBody.append('\n');
-                requestBody.append('\n');
-                requestBody.append(params[0]);
-                requestBody.append("--");
-                requestBody.append(BOUNDRY);
-                requestBody.append("--");
+                //set up POST request with headers
+                Request request = new Request.Builder()
+                        .url("http://188.226.195.167:8889/image")
+                        .post(requestBody)
+                        .addHeader("Content-Type", "image/jpeg")
+                        .addHeader("Slug", "photo.jpg")
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
 
-
-                //Create URL route
-                route = new URL(hostUrl);
-                System.out.println("route is new URL");
-                //open connection and ready it for post request
-                client = (HttpURLConnection) route.openConnection();
-                client.setRequestMethod("POST");
-                client.setDoOutput(true);
-                client.setDoInput(true);
-                client.setUseCaches(false);
-                client.setRequestProperty("Content-Type", "multipart/form-data; boundary="+BOUNDRY);
-                System.out.println("connection opened");
-
-                // Send the body
-                DataOutputStream dataOS = new DataOutputStream(client.getOutputStream());
-                dataOS.writeBytes(requestBody.toString());
-                dataOS.flush();
-                dataOS.close();
-
-                //receive results
-                StringBuilder sb = new StringBuilder();
-
-                int HttpResult = client.getResponseCode();
-                BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream(), "utf-8"));
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
                 }
-                br.close();
-                System.out.println("" + sb.toString());
-
-                return true;
+                else{
+                    //grab returned image location and return true to postexecute
+                    String results = response.header("Location");
+                    url= "http://188.226.195.167:8889" +results;
+                    return true;
+                }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (ProtocolException e) {
@@ -118,24 +88,12 @@ public class ThumborPost extends AsyncTask<File, Void, Boolean> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return false;
         }
 
 
+    public void onPostExecute(Boolean result){
+        if (result)fragment.update(url);
 
-    public static Bitmap urlStringToBitmap(String s){
-        Bitmap image = null;
-        try {
-            InputStream in = new URL(s).openStream();
-            image = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-        return image;
-    }
-    public void onPostExecute(String url){
-        fragment.update(url);
-//        fragment.displayData(photoBitmaps, captions);
     }
 }

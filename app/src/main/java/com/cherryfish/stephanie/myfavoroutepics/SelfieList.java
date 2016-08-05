@@ -1,8 +1,6 @@
 package com.cherryfish.stephanie.myfavoroutepics;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +23,7 @@ import java.util.List;
  */
 public class SelfieList extends Fragment {
     private RecyclerView recyclerView;
-    private ListAdapterTwo adapter;
+    private ListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private TextView noPics;
 
@@ -34,36 +32,34 @@ public class SelfieList extends Fragment {
 
         View view = inflater.inflate(R.layout.selfie_list, container, false);
 
+        //initialize recycler view for images
         recyclerView = (RecyclerView) view.findViewById(R.id.selfie_recycler);
 
-        // Setting the LayoutManager.
+        // initializing layout manager
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
+        //initialize textview for no pictures
         noPics = (TextView) view.findViewById(R.id.no_pics);
 
-        //getting stored images and captions
-//        MainActivity.images = getImages();
+        //grab image URLs and captions
         MainActivity.urls= getURLS();
         MainActivity.captions = getCaptions();
 
         //show message instructing to take photos if no images
         if (MainActivity.urls != null) {
             if (MainActivity.urls.size() > 0) {
-                System.out.println("view invisible");
-                System.out.println(MainActivity.urls.size());
                 noPics.setVisibility(View.GONE);
             } else {
-                System.out.println("view visible");
-                System.out.println(MainActivity.urls.size());
                 noPics.setVisibility(View.VISIBLE);
             }
         }
             else {
-                System.out.println("view visible");
-                System.out.println(MainActivity.urls.size());
                 noPics.setVisibility(View.VISIBLE);
             }
-        adapter = new ListAdapterTwo((MainActivity) getActivity(), MainActivity.urls, MainActivity.captions);
+
+        //create new adapter for image recycler view
+        adapter = new ListAdapter((MainActivity) getActivity(), MainActivity.urls, MainActivity.captions);
         recyclerView.setAdapter(adapter);
 
         //set up colors
@@ -73,11 +69,10 @@ public class SelfieList extends Fragment {
         MainActivity.showTravels.setTextColor(MainActivity.teal);
         return view;
 
-
     }
 
 
-    //update view to show images through adapter and save selfies to device
+    //update view to show images through adapter and save selfies/captions to device
     public void addImages(List<String> urls, List<String> captions) {
         noPics.setVisibility(View.GONE);
         adapter.urls=urls;
@@ -87,44 +82,18 @@ public class SelfieList extends Fragment {
         saveCaptions();
     }
 
- /*   //save selfie images to device
-    public void saveImages() {
-
-        for (int i = 0; i < MainActivity.urls.size(); i++) {
-
-            String name = i + "." + "png";
-            FileOutputStream outputStream;
-            try {
-                outputStream = getContext().openFileOutput(name, Context.MODE_PRIVATE);
-                System.out.println(outputStream);
-                MainActivity.images.get(i).compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
-                outputStream.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-*/
 
     //save selfie images to device
     public void saveURLs() {
-
         for (int i = 0; i < MainActivity.urls.size(); i++) {
-
             String name = "image" + i + ".txt";
-            FileOutputStream outputStream;
-            System.out.println("saving urls");
+            FileOutputStream outputStream;;
             try {
                 outputStream = getContext().openFileOutput(name, Context.MODE_PRIVATE);
-                System.out.println(outputStream);
                 OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream);
                 streamWriter.write(MainActivity.urls.get(i));
-                System.out.println(MainActivity.urls.get(i));
                 streamWriter.flush();
                 streamWriter.close();
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -137,11 +106,9 @@ public class SelfieList extends Fragment {
         for (int i = 0; i < MainActivity.captions.size(); i++) {
 
             String name = i + ".txt";
-            System.out.println("saving caption as " + name);
             FileOutputStream outputStream;
             try {
                 outputStream = getContext().openFileOutput(name, Context.MODE_PRIVATE);
-                System.out.println(outputStream);
                 OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream);
                 streamWriter.write(MainActivity.captions.get(i));
                 streamWriter.flush();
@@ -153,9 +120,9 @@ public class SelfieList extends Fragment {
         }
     }
 
-    //get the saved captions
+    //get the saved image URLs
     public List<String> getURLS(){
-        List<String> tempCaps = new ArrayList<String>();
+        List<String> captions = new ArrayList<String>();
         for (int i=0; i<MainActivity.selfieListSize; i++) {
             String name = "image" + i + ".txt";
             try {
@@ -168,16 +135,13 @@ public class SelfieList extends Fragment {
                     sb.append(line);
                 }
                 inputStream.close();
-//                System.out.println("getting caption" + sb.toString());
-                System.out.println(sb.toString());
-                tempCaps.add(sb.toString());
+                captions.add(sb.toString());
             } catch (Exception e) {
                 System.out.println(e);
-                System.out.println("problem finding url");
             }
 
         }
-        return tempCaps;
+        return captions;
 
     }
 
@@ -196,38 +160,14 @@ public class SelfieList extends Fragment {
                     sb.append(line);
                 }
                 inputStream.close();
-//                System.out.println("getting caption" + sb.toString());
                 tempCaps.add(sb.toString());
             } catch (Exception e) {
-                System.out.println("problem finding caption");
+                System.out.println(e);
             }
 
         }
         return tempCaps;
 
     }
-
-  /*  //get the saved images
-    public List<Bitmap> getImages() {
-        List<Bitmap> tempImgs = new ArrayList<Bitmap>();
-        for (int i = 0; i < MainActivity.selfieListSize; i++) {
-            String name = i + ".png";
-            try {
-                FileInputStream fis = getContext().openFileInput(name);
-                Bitmap b = BitmapFactory.decodeStream(fis);
-                fis.close();
-//                System.out.println("getting image " + fis);
-                tempImgs.add(b);
-
-            } catch (Exception e) {
-                System.out.println("problem finding image");
-            }
-
-        }
-        return tempImgs;
-
-    }*/
-
-
 
 }
