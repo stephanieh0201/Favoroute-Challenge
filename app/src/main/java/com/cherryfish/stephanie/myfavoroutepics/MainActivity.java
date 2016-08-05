@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static String searchTerm;
     public static List<Bitmap> images;
     public static List<String> captions;
+    public static List<String> urls;
     public static int selfieListSize;
 
 //    apikey==0f6f6c131f8eb464ded3ac9ada60bc00
@@ -141,7 +142,12 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences settings = getSharedPreferences("Selfie", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("selfieNumber", MainActivity.images.size());
+        if (urls != null) {
+            editor.putInt("selfieNumber", MainActivity.urls.size());
+        }
+        else
+            editor.putInt("selfieNumber", 0);
+
         editor.commit();
     }
 }

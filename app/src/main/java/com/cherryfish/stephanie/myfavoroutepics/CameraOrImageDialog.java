@@ -95,6 +95,7 @@ public class CameraOrImageDialog extends DialogFragment {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                     AddSelfieDialog.photoSelected=true;
+                    System.out.println("bitmap is " +bitmap.toString());
                     AddSelfieDialog fragment = (AddSelfieDialog) getFragmentManager().findFragmentByTag("AddSelfieDialog");
                     fragment.updateImage(bitmap);
                 } catch (IOException e) {
